@@ -1,8 +1,8 @@
 ## A Detailed View inside V8 Javascript Engine
 
-In this tutorial we will find out how exactly V8 executes the js code `'hello' + 'world'`, by analyzing and examining every line in [`hello-world.cc`](https://github.com/EdgenDy/Learning-V8-Javascript-Engine/blob/main/hello-world.cc) file in `v8/samples` directory. 
+In this tutorial we will find out how exactly V8 executes the js code `'hello' + 'world'`, by analyzing and examining every line in [`hello-world.cc`](https://github.com/v8/v8/blob/7.9.2/samples/hello-world.cc) file in `v8/samples` directory. 
 
-Note : The version of v8 that we will used here is [v8-7.9.2](https://chromium.googlesource.com/v8/v8/+/refs/tags/7.9.2). 
+Note : The version of v8 that we will used here is [v8-7.9.2](https://github.com/v8/v8/tree/7.9.2). 
 
 What are we waiting for, lets get started!
 
@@ -43,7 +43,7 @@ The third is `in_process_stack_dumping` which is a key of enum class `InProcessS
 17 | enum class InProcessStackDumping { kDisabled, kEnabled };
 ```
 
-And the last is `v8::TracingController` that wraps in `std::unique_ptr` object and construct it with the default constructor as its initial value.
+And the last is `v8::TracingController` that wraps in an empty `std::unique_ptr` object.
 
 ```c++
 // include/v8-platform.h
@@ -85,7 +85,7 @@ In this line of code we allocate `DefaultPlatform` object instance on the heap b
 ```
 
 
-**Definition:**
+**Implementation:**
 ```c++
 // src/libplatform/default-platform.cc
 
@@ -104,4 +104,52 @@ In this line of code we allocate `DefaultPlatform` object instance on the heap b
 81 |  }
 82 | }
 ```
+Inside this constructor it only check if `tracing_controller_` is empty and then it will create a new `v8::platform::tracing::TracingController` object instance and it will Initialize as you've seen on the code above. `TracingController` extends the public base class `v8::TracingController`.
+
+**Declaration**
+```c++
+// include/libplatform/v8-tracing.h
+
+229 | class V8_PLATFORM_EXPORT TracingController
+230 |     : public V8_PLATFORM_NON_EXPORTED_BASE(v8::TracingController) {
+231 |  public:
+    |   ...
+249 |   void Initialize(TraceBuffer* trace_buffer);
+    |   ... 
+310 | }; 
+```
+
+**Implementation**
+```c++
+// src/libplatform/tracing/tracing-controller.cc
+
+64 | TracingController::TracingController() = default;
+   | ... 
+81 | void TracingController::Initialize(TraceBuffer* trace_buffer) {
+82 |   trace_buffer_.reset(trace_buffer);
+83 |   mutex_.reset(new base::Mutex());
+84 | }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
