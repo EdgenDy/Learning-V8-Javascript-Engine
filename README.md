@@ -1,6 +1,6 @@
-## A Detailed View inside of V8 Javascript Engine
+## A Detailed View inside V8 Javascript Engine
 
-In this tutorial we will find out how exactly V8 executes the js code `'hello' + 'world'`, by analyzing and examining every line in `hello-world.cc` file in `v8/samples` directory. 
+In this tutorial we will find out how exactly V8 executes the js code `'hello' + 'world'`, by analyzing and examining every line in [`hello-world.cc`]() file in `v8/samples` directory. 
 
 Note : The version of v8 that we will used here is [v8-7.9.2](https://chromium.googlesource.com/v8/v8/+/refs/tags/7.9.2). 
 
